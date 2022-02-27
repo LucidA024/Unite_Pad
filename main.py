@@ -63,10 +63,53 @@ class Core:
 			pady = 3,
 			)
 		
+		main.Secondary = Frame(
+			main.gui,
+			bg = "black",
+			)
+		main.Secondary.pack(
+			fill=X,
+			)
+		
+		main.SL = Label(
+			main.Secondary,
+			text="File Dir: "
+			)
+		main.SL.pack(
+			side = LEFT,
+			padx = 3,
+			pady = 3,
+			)
+			
+		main.SLL = Label(
+			main.Secondary,
+			text="Choose!"
+			)
+		main.SLL.pack(
+			side = LEFT,
+			padx = 3,
+			pady = 3,
+			)
+
+		main.SLLL = Label(
+			main.Secondary,
+			text="None!"
+			)
+		main.SLLL.pack(
+			side = LEFT,
+			padx = 3,
+			pady = 3,
+			)			
+		
+		def clean():
+			os.system("clear")	
 		main.Save_Run_Button = Button(
 			main.Reference_Bar,
 			text = "Clear Console",
+			command = clean,
 			)
+
+			
 		main.Save_Run_Button.pack(
 			side = RIGHT,
 			padx = 3,
@@ -149,8 +192,24 @@ class Core:
 		main.file_lists()
 		
 	def selected(main):
+		def failsave():
+			text = main.notepad.get(1.0,END)
+			with open(main.SLLL["text"], 'w') as file:
+				file.write(text)
+		try:
+			failsave() #-->Just incase misclicked!
+		
+		except:
+			pass
+		
+		try:
+			main.IDETab.destroy()
+		except:
+			pass
+
 		for i in main.FL.curselection():
 			ox = main.FL.get(i)
+		
 		if os.path.isfile(ox) == True :			
 			#print("It is a file")
 			#ming = ox
@@ -158,6 +217,27 @@ class Core:
 			#print(ming)
 			directory = os.getcwd()
 			path = directory + "/" + ox
+			
+			main.SLL.forget()
+			main.SLLL.forget()
+			main.SLL = Label(
+				main.Secondary,
+				text=directory
+				)
+			main.SLL.pack(
+				side = LEFT,
+				padx = 3,
+				pady = 3,
+				)
+			main.SLLL = Label(
+				main.Secondary,
+				text=ox
+				)
+			main.SLLL.pack(
+				side = LEFT,
+				padx = 3,
+				pady = 3,
+				)			
 			filename, filext =os.path.splitext(path)
 			if filext == ".py" or filext == ".java":
 				main.IDETab = ttk.Frame(main.WorkingTab, height = 10000, width=1910)
@@ -169,29 +249,46 @@ class Core:
 				main.StatusFrame.pack(
 					fill = X,
 					)
-				#Dir:
-				#Directory
-				main.DirectFile = Label(
-					main.StatusFrame,
-					text=os.getcwd(),
-					)
-				main.DirectFile.pack(
-					side = LEFT,
-					)
-					
-				#Type
-				jp = os.getcwd()
-				path = jp + "/" + ox
-				name, ext = os.path.splitext(path)
-				if ext == ".py":
-					print("Python")
+
 				
 				def run_it():
-					os.chdir(jp)
-					text = main.notepad.get(1.0,END)
-					print(text)
-					#os.system("python3 " + ox)
-					#print(path)
+					#print(main.WorkingTab.select(tabId))
+					jp = os.getcwd()
+					path = jp + "/" + ox
+					name, ext = os.path.splitext(path)
+					
+					if ext == ".py":
+						#print("Python")		
+						pythonname = main.SLLL["text"]
+						pythondir = main.SLL["text"]
+						os.chdir(pythondir)
+						text = main.notepad.get(1.0,END)
+						with open(pythonname, 'w') as file:
+							file.write(text)
+						#print(text)
+						os.system("python3 " + pythonname)
+						#print(path)
+						#os.chdir.main.Directory_Status["text"]
+						main.file_lists()
+					elif ext == ".java":
+						#print(main.DirectFile["text"])
+						javaname = main.SLLL["text"]
+						javadir = main.SLL["text"]
+						os.chdir(javadir)
+						text = main.notepad.get(1.0,END)
+						with open(javaname, 'w') as file:
+							file.write(text)
+						#print(text)
+						mainname, xxx = os.path.splitext(javaname)
+						os.system("javac " + javaname)
+						os.system("java " + mainname)
+						main.file_lists()						
+						#print(path)						
+						#os.chdir.main.Directory_Status["text"]
+					
+					else:
+						print("others")
+				
 				#Save and Run
 				main.SR_Button = Button(
 					main.StatusFrame,
@@ -205,6 +302,20 @@ class Core:
 					)
 				
 				#Exit and Save
+				main.EButton = Button(
+					main.StatusFrame,
+					text = "Exit/Save",
+					command = lambda: closeTab(),
+					)
+				main.EButton.pack(
+					side = RIGHT,
+					padx = 3,
+					pady = 3
+					)
+					
+				def closeTab():
+					main.WorkingTab.forget(main.WorkingTab.select())
+				
 				main.notepad = Text(main.IDETab, height = 10000, width=1910)
 				main.notepad.pack()
 				main.WorkingTab.add(main.IDETab, text=ox)
@@ -249,6 +360,7 @@ class Core:
 		main.WorkingTab.pack(
 			side=LEFT,
 			)
+
 	
 	#Add Virtual File Manager --> Menu Bar Version
 	def Menu_FileManager(main):
@@ -363,10 +475,10 @@ class Core:
 		main.Graphic.add_command(label="3D Beta")
 		
 		#Experimental Menu --> Must Delete Later!
-		main.Experimental = Menu(main.MenuBars, tearoff=0)
-		main.MenuBars.add_cascade(label="Experimental Menu", menu = main.Experimental)
+		#main.Experimental = Menu(main.MenuBars, tearoff=0)
+		#main.MenuBars.add_cascade(label="Experimental Menu", menu = main.Experimental)
 		
-		main.Experimental.add_command(label="Check Directory", command = main.check_dir)
+		#main.Experimental.add_command(label="Check Directory", command = main.check_dir)
 		#main.Experimental.add_command(label="Add Tab", command = main.add_tab)
 		#main.Experimental.add_command(label="Print File", command = main.PrintFiles)
 		
