@@ -1,198 +1,388 @@
-import os
-from tkinter import*
+from tkinter import *
 from tkinter import filedialog as fd
+import os
+from tkinter import ttk
+from pathlib import Path
 
-class core:
-    def __init__(mind):
-        mind.gui = Tk()
-        mind.gui.title("Unite Pad")
-        mind.gui.resizable(False, False)
 
-        #menubars
-        mind.menusbar = Menu(mind.gui)
+os.system("clear")
+mess = '''UnitePad Linux Edition:'''
+print(mess)
+os.system("neofetch")
+print("Dear User, Nothing to Worry! Every Click you made, it automatically saves your progress!")
+print("\t~Lucid A024")
+print("\n\nIt is designed to interact the app and the console!")
 
-        #cascades
-        #File
-        mind.Files = Menu(mind.menusbar, tearoff=0)
-        #mind.Files.add_command(label="Open",command=mind.open_file,)
-        mind.Files.add_command(label="Open Folder", command=mind.open_folder)
-        mind.Files.add_command(label="Save")
-        mind.Files.add_command(label="Save As")
-        mind.menusbar.add_cascade(label="Files", menu=mind.Files)
-        
-        #Tool
-        mind.tools = Menu(mind.menusbar, tearoff=0)
-        #Open CMD
-        mind.tools.add_command(label="Open CMD/Terminal")
-        mind.menusbar.add_cascade(label="Tools", menu=mind.tools)
+class Core:
+	def __init__(main):
+		main.gui = Tk()		
+		main.Constructor()
+		
+	def Constructor(main):
+		main.App_Configuration()
+		main.App_Menu()
+		main.Reference_Bar()
+		main.VFM()
+		main.Working_Sheets()
+		#main.Menu_FileManager()
+		
+		#main.Testing()
+	
+	def App_Configuration(main):
+		main.gui.geometry("1000x700")
+		main.gui.title("UnitePad Studio (Beta)")
+	
+	#Reference Bar --> Displays the directory --> Displays the file name -->Displays what type of file
+	def Reference_Bar(main):
+		main.Reference_Bar = Frame(
+			main.gui,
+			bg="black"
+			)
+		main.Reference_Bar.pack(
+			fill=X,
+			)
+		
+		#This is the directory
+		main.Directory_Label = Label(
+			main.Reference_Bar,
+			text="Global Directory: "
+			)
+		main.Directory_Label.pack(
+			side = LEFT,
+			padx = 3,
+			pady = 3,
+			)
+		#This is the status of the directory
+		main.Directory_Status = Label(
+			main.Reference_Bar,
+			text=os.getcwd()
+			)
+		main.Directory_Status.pack(
+			side = LEFT,
+			padx = 3,
+			pady = 3,
+			)
+		
+		main.Save_Run_Button = Button(
+			main.Reference_Bar,
+			text = "Clear Console",
+			)
+		main.Save_Run_Button.pack(
+			side = RIGHT,
+			padx = 3,
+			pady = 3,
+			)
+	#Patched File Manager
+	def VFM(main):
+		main.VFM = Frame(
+			main.gui,
+			bg="red",
+			width = 150,
+			)
+		main.VFM.pack(
+			side=LEFT,
+			fill=Y,
+			)
+		
+		#Upper Layer!
+		main.UpperLayer00 = Frame(
+			main.VFM,
+			)
+		main.UpperLayer00.pack(
+			fill=X,
+			)
+		main.File_Manager_Label = Label(
+			main.UpperLayer00,
+			text="File Manager",
+			)
+		main.File_Manager_Label.pack(
+			pady=5,
+			padx=5,
+			)
+		#Button Layer!
+		main.ButtonLayer00 = Frame(
+			main.VFM,
+			)
+		main.ButtonLayer00.pack(
+			fill=X,
+			)
+		#Back Button
+		main.BackButt = Button(
+			main.ButtonLayer00,
+			text = "<-- Back",
+			bg="yellow",
+			command = main.Get_New_Directory,
+		)
+		main.BackButt.pack(
+			side = LEFT,
+		)
+		
+		#New Layer
+		main.ListLayer00 = Frame(
+			main.VFM,
+			)
+		main.ListLayer00.pack(
+			fill=X,
+			)
+		main.List_Items()
+	def List_Items(main):
+		#The listbox of directory
+		main.FL = Listbox(
+			main.ListLayer00,
+			height = 900,
+			)
+		main.FL.pack()
+		main.FL.bind('<Double-1>', lambda event: main.selected())
+		#main.FL.forget()
+		directory = os.getcwd()
+		lists =os.listdir(directory)
 
-        mind.gui.config(menu=mind.menusbar)
+		for x in range(len(lists)):
+			#print(lists[x])
+			main.FL.insert(x,lists[x])
+			
+	def back_dir(main):
+		directory = os.getcwd()
+		path = Path(directory)
+		backed = path.parent.absolute()
+		os.chdir(backed)
+		main.file_lists()
+		
+	def selected(main):
+		for i in main.FL.curselection():
+			ox = main.FL.get(i)
+		if os.path.isfile(ox) == True :			
+			#print("It is a file")
+			#ming = ox
+			#ming = False
+			#print(ming)
+			directory = os.getcwd()
+			path = directory + "/" + ox
+			filename, filext =os.path.splitext(path)
+			if filext == ".py" or filext == ".java":
+				main.IDETab = ttk.Frame(main.WorkingTab, height = 10000, width=1910)
+				
+				main.StatusFrame = Frame(
+					main.IDETab,
+					bg="black",
+					)
+				main.StatusFrame.pack(
+					fill = X,
+					)
+				#Dir:
+				#Directory
+				main.DirectFile = Label(
+					main.StatusFrame,
+					text=os.getcwd(),
+					)
+				main.DirectFile.pack(
+					side = LEFT,
+					)
+					
+				#Type
+				jp = os.getcwd()
+				path = jp + "/" + ox
+				name, ext = os.path.splitext(path)
+				if ext == ".py":
+					print("Python")
+				
+				def run_it():
+					os.chdir(jp)
+					text = main.notepad.get(1.0,END)
+					print(text)
+					#os.system("python3 " + ox)
+					#print(path)
+				#Save and Run
+				main.SR_Button = Button(
+					main.StatusFrame,
+					text = "Save/Run",
+					command = run_it,
+					)
+				main.SR_Button.pack(
+					side = RIGHT,
+					padx = 3,
+					pady = 3,
+					)
+				
+				#Exit and Save
+				main.notepad = Text(main.IDETab, height = 10000, width=1910)
+				main.notepad.pack()
+				main.WorkingTab.add(main.IDETab, text=ox)
+				
+				with open(path, 'r') as file:
+					text = file.read()
+					main.notepad.insert('1.0', text)
+				
+			else:
+				pass
 
-        
-        #Info Bar
-        mind.Info_bar = Frame(
-            mind.gui,
-            bg="black",
-        )
-        mind.Info_bar.pack(
-            fill=BOTH
-        )
-        #Directory Entry
-        mind.directory_entry = Entry(
-            mind.Info_bar,   
-            width=50,
-        )
-        mind.directory_entry.pack(
-            pady=5,
-            padx=5,
-            side=LEFT,
-        )
-        #Filename Entry
-        mind.Filename = Entry(
-            mind.Info_bar,
-        )
-        mind.Filename.pack(
-            pady=5,
-            padx=5,
-            side=LEFT,
-        )
-        #?
-        mind.idkwhatisthisshit = Button(
-            mind.Info_bar,
-            bg="blue",
-            text="?",
-        )
-        mind.idkwhatisthisshit.pack(
-            pady=5,
-            padx=5,
-            side=LEFT,
-        )
+			
 
-        #Filler
-        mind.filler()
+				
+				
+		
+		elif os.path.isdir(ox) == True :
+			directory = os.getcwd()
+			path = directory + "/"+ox
+			new_dir = os.chdir(path)	
+			main.FL.forget()
+			main.Directory_Status.forget()
+			#This is the status of the directory
+			main.Directory_Status = Label(
+				main.Reference_Bar,
+				text=os.getcwd()
+				)
+			main.Directory_Status.pack(
+				side = LEFT,
+				padx = 3,
+				pady = 3,
+				)			
+			main.List_Items()
+			#print(path)
+			
+	#Default Null WorkPlace
+	def Working_Sheets(main):
+		#Declare the notebook
+		main.WorkingTab = ttk.Notebook(
+			main.gui,
+			)
+		main.WorkingTab.pack(
+			side=LEFT,
+			)
+	
+	#Add Virtual File Manager --> Menu Bar Version
+	def Menu_FileManager(main):
+		#The default tab
+		main.DefaultTab = ttk.Frame(main.WorkingTab, height = 900, width=1910)
+		main.WorkingTab.add(main.DefaultTab, text="File Manager")
 
-        #Action Bar
-        mind.actionbar = Frame(
-            mind.gui,
-            bg="black",
-        )
-        mind.actionbar.pack(
-            fill=BOTH,
-        )
-        #Languange Entry
-        mind.language_entry = Entry(
-            mind.actionbar,
-        )
-        mind.language_entry.pack(
-            padx=5,
-            pady=5,
-            side=LEFT,
-        )
+	
+	#Functions
+	def exit_app(main):
+		exit()
+	
+	def check_dir(main):
+		directory = os.getcwd()
+		print(directory)
 
-        #Run Button
-        mind.run_button = Button(
-            mind.actionbar,
-            bg="Yellow",
-            text="Run",
-            command=mind.test_run,
-        )
-        mind.run_button.pack(
-            side=RIGHT,
-            pady=5,
-            padx=5,
-        )
-        #Virtual Explorer
-        mind.virtualexplorer_toplayer = Frame(
-            mind.gui,
-            bg="grey"
-        )
-        mind.virtualexplorer_toplayer.pack(
-            fill=BOTH,
-            side=LEFT
-        )
-        #Actionbar Explorer
-        mind.Explorer = Listbox(
-            mind.virtualexplorer_toplayer,
-            bg="grey",
-            height=23,
-        )
-        #Text
-        mind.pad = Text(
-            mind.gui,
-            )
-        mind.pad.pack()
+	def add_tab(main):
+		x=0
+		x = x+1
+		main.DefaultTab = ttk.Frame(main.WorkingTab, height = 900, width=1910)
+		main.texty = Text(main.DefaultTab).pack()
+		main.WorkingTab.add(main.DefaultTab, text=x)
+	
+	def Get_New_Directory(main):
+		directory = os.getcwd()
+		path = Path(directory)
+		backed = path.parent.absolute()
+		new_dir = os.chdir(backed)	
+		main.Directory_Status.forget()
+		#This is the status of the directory
+		main.Directory_Status = Label(
+			main.Reference_Bar,
+			text=os.getcwd()
+			)
+		main.Directory_Status.pack(
+			side = LEFT,
+			padx = 3,
+			pady = 3,
+			)		
+		main.FL.forget()
+		main.List_Items()
 
-    #Functions
+		#main.Menu_FileManager()
+		
+	def Get_New_Directory2(main):
+		new_dir = fd.askdirectory()
+		os.chdir(new_dir)
+		main.Directory_Status.config(text=new_dir)
+	
+	def App_Menu(main):
+		main.MenuBars = Menu(main.gui)
+		
+		#Files
+		main.Files = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label="Files", menu = main.Files)
+		
+		#main.Files.add_command(label="Open Folder", command=main.Get_New_Directory2)
+		main.Files.add_command(label="Save")
+		main.Files.add_command(label="Exit", command = main.exit_app)
+		
+		#Tools
+		main.Tools = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label="Tools", menu = main.Tools)
+		
+		main.Tools.add_command(label="Open CMD/Terminal")
+		main.Tools.add_command(label="BODH -Converter")
+		main.Tools.add_command(label="Color Picker")
+		
+		#Programs
+		main.Programs = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label="Programs", menu = main.Programs)
+		
+		#Python
+		main.Python = Menu(main.MenuBars, tearoff=0)
+		main.Programs.add_cascade(label="Python", menu = main.Python)
+		
+		main.Python.add_command(label="New Python File")
+		main.Python.add_command(label="New Tkinter File(GUI)")
+		main.Python.add_command(label="Create Virtual Environment")
+		#Add more Python in the future just in case!
+				
+		#Java
+		main.Java = Menu(main.MenuBars, tearoff=0)
+		main.Programs.add_cascade(label="Java", menu = main.Java)
+		
+		main.Java.add_command(label="New Java File")
+		main.Java.add_command(label="Java GUI")#Implement all Action Commands and Mouse Listener
+		#Add more Java in the future just in case!
 
-    #Open File Function
-    def open_folder(mind):
-        file = fd.askdirectory()
-        #print(file)
-        #Then Gets the Directory
-        mind.directory_entry.delete(0,"end")
-        mind.directory_entry.insert(0, file)
-        mind.deploy_virtual_explorer()
-    
-    #Virtual File Explorer
-    def deploy_virtual_explorer(mind):
-        def getElement(event):
-            selection = event.widget.curselection()
-            index = selection[0]
-            value = event.widget.get(index)
-            dir  = mind.directory_entry.get()
-            filepath = dir + "/"+value
-            with open(filepath, 'r') as file:
-                texts = file.read()
-                mind.pad.delete('1.0', END)
-                mind.pad.insert('1.0', texts)
-                mind.Filename.delete(0,END)
-                mind.Filename.insert(0,value)
-        dir  = mind.directory_entry.get()
-        #print(dir)
-        flist = os.listdir(dir)
-        #print(flist)
-        mind.Explorer = Listbox(
-            mind.virtualexplorer_toplayer,
-        )
-        mind.Explorer.bind('<Double-1>', getElement)
-        mind.Explorer.pack()
-        for item in flist:
-            mind.Explorer.insert(END, item)
-        mind.deploy_ext()
-            
-    def deploy_ext(mind):
-        a = mind.directory_entry.get()
-        b = mind.Filename.get()
-        c= a + "/"  + b
-        base = os.path.basename(c)
-        os.path.splitext(base)
-        e = os.path.splitext(base)[1]
-        print("banana" + e)
-        mind.language_entry.delete(0,END)
-        mind.language_entry.insert(0, e)
-
-    def test_run(mind):
-        mind.deploy_ext()
-        a = mind.directory_entry.get()
-        #print(a)
-        b = mind.Filename.get()
-        #print(b)
-        runner = "python3 " +b
-        print(runner)
-        #os.system(runner)
-
-    def filler(mind):
-        mind.filler_bar = Frame(
-            mind.gui,
-            bg="white",
-        )
-        mind.filler_bar.pack(
-            fill=BOTH
-        )
-    
-    def process(mind):
-        mind.gui.mainloop()
-
+		#Web
+		main.Web = Menu(main.MenuBars, tearoff=0)
+		main.Programs.add_cascade(label="Web", menu = main.Web)
+		#HTML
+		main.Web.add_command(label="New HTML File")
+		#CSS
+		main.Web.add_command(label="New CSS File")
+		#JavaScript
+		main.Web.add_command(label="New Javascript File")
+		
+		#Graphic
+		main.Graphic = Menu(main.MenuBars, tearoff=0)
+		main.Programs.add_cascade(label="Graphic", menu = main.Graphic)
+		#Editing --> Photo Editing/Video Editing
+		main.Editing = Menu(main.MenuBars, tearoff=0)
+		main.Graphic.add_cascade(label="Editing", menu = main.Editing)
+		main.Editing.add_command(label="Photo Editing")
+		main.Editing.add_command(label="Video Editing")
+		
+		#Animating Beta
+		main.Graphic.add_command(label="Painting Beta")
+		main.Graphic.add_command(label="Animating Beta")
+		main.Graphic.add_command(label="3D Beta")
+		
+		#Experimental Menu --> Must Delete Later!
+		main.Experimental = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label="Experimental Menu", menu = main.Experimental)
+		
+		main.Experimental.add_command(label="Check Directory", command = main.check_dir)
+		#main.Experimental.add_command(label="Add Tab", command = main.add_tab)
+		#main.Experimental.add_command(label="Print File", command = main.PrintFiles)
+		
+		
+		main.gui.config(menu=main.MenuBars)
+	
+	def PrintFiles(main):
+		directory = os.getcwd()
+		lists =os.listdir(directory)
+		
+		for x in range(len(lists)):
+			print(lists[x])
+	
+	def CoreRunner(main):
+		main.gui.mainloop()
+	
 if __name__=="__main__":
-    machine=core()
-    machine.process()
+	App = Core()
+	App.CoreRunner()
