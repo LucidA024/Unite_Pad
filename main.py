@@ -3,6 +3,8 @@ from tkinter import filedialog as fd
 import os
 from tkinter import ttk
 from pathlib import Path
+from tkinter import messagebox
+
 
 
 os.system("clear")
@@ -189,8 +191,7 @@ class Core:
 		path = Path(directory)
 		backed = path.parent.absolute()
 		os.chdir(backed)
-		main.file_lists()
-		
+		#main.file_lists()
 	def selected(main):
 		def failsave():
 			text = main.notepad.get(1.0,END)
@@ -269,7 +270,12 @@ class Core:
 						os.system("python3 " + pythonname)
 						#print(path)
 						#os.chdir.main.Directory_Status["text"]
-						main.file_lists()
+						#main.file_lists()
+						#main.Get_New_Directory()
+						#reloads the file manager
+						main.FL.forget()
+						main.List_Items()
+												
 					elif ext == ".java":
 						#print(main.DirectFile["text"])
 						javaname = main.SLLL["text"]
@@ -282,13 +288,48 @@ class Core:
 						mainname, xxx = os.path.splitext(javaname)
 						os.system("javac " + javaname)
 						os.system("java " + mainname)
-						main.file_lists()						
+						
+						#reloads the file manager
+						main.FL.forget()
+						main.List_Items()
+						#main.Get_New_Directory()						
+						#main.file_lists()						
 						#print(path)						
 						#os.chdir.main.Directory_Status["text"]
 					
 					else:
 						print("others")
 				
+				
+				#Rename File
+				def renameF():
+					#x = messagebox.askquestion("Form", "What do you want to rename to?")
+					#print(x)
+					print("----------")
+					newName = input("You want to rename " + main.SLLL["text"] + " to?: ")
+					#print(newName)
+					os.rename(main.SLLL["text"], newName)
+					
+					#reloads the file manager
+					main.FL.forget()
+					main.List_Items()	
+					failsave()
+					
+					try:
+						main.IDETab.destroy()
+					except:
+						pass									
+					
+				main.RF_Button = Button(
+					main.StatusFrame,
+					text = "Rename",
+					command = renameF,
+					)
+				main.RF_Button.pack(
+					side = LEFT,
+					padx = 3,
+					pady = 3,
+					)				
 				#Save and Run
 				main.SR_Button = Button(
 					main.StatusFrame,
@@ -314,6 +355,7 @@ class Core:
 					)
 					
 				def closeTab():
+					failsave()
 					main.WorkingTab.forget(main.WorkingTab.select())
 				
 				main.notepad = Text(main.IDETab, height = 10000, width=1910)
