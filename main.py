@@ -5,6 +5,8 @@ import os
 class Core:
 	def __init__(main):
 		os.system("color 3")
+		desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+		os.chdir(desktop)
 		print("Please save your work before hiting the x or any close button!\n")
 		print("Designed to Interact with the console :)\n")
 		main.gui = Tk()
@@ -470,6 +472,7 @@ class Core:
 				except:
 					os.rmdir(name)
 					print("\t[Done Deleting the Folder!]")
+				main.RefreshState()
 
 			elif feedback02 == "n":
 				print("\tOkay! You're Welcome!")
