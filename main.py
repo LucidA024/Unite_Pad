@@ -550,6 +550,7 @@ class Core:
 		main.FileMenu()
 		main.ProgramMenu()
 		main.ConsoleMenu()
+		main.AboutMenu()
 
 	def ProgramMenu(main):
 		main.Programs = Menu(main.MenuBars, tearoff=0)
@@ -565,6 +566,15 @@ class Core:
 		main.Programs.add_command(label = "New HTML", command = main.newHTML)
 		main.Programs.add_command(label = "New CSS", command = main.newCSS)
 		main.Programs.add_command(label = "New Javascript", command = main.newJS)
+
+	def AboutMenu(main):
+		main.Aboutz = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label = "About", menu = main.Aboutz)
+	
+		main.Aboutz.add_command(label = "Support!", command = main.openShitSite)
+
+	def openShitSite(main):
+		os.system("start \"\" http://lucidowl.c1.biz/")
 
 	def newFolder(main):
 		os.mkdir("New ToasterFolder")
