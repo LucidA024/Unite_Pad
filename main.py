@@ -1,542 +1,654 @@
 from tkinter import *
-from tkinter import filedialog as fd
-import os
-from tkinter import ttk
 from pathlib import Path
-from tkinter import messagebox
-
-
-
-os.system("clear")
-mess = '''UnitePad Linux Edition:'''
-print(mess)
-os.system("neofetch")
-print("Dear User, Nothing to Worry! Every Click you made, it automatically saves your progress!")
-print("\t~Lucid A024")
-print("\n\nIt is designed to interact the app and the console!")
+import os
 
 class Core:
 	def __init__(main):
-		main.gui = Tk()		
+		os.system("color 3")
+		print("Please save your work before hiting the x or any close button!\n")
+		print("Designed to Interact with the console :)\n")
+		main.gui = Tk()
 		main.Constructor()
-		
+
 	def Constructor(main):
-		main.App_Configuration()
-		main.App_Menu()
-		main.Reference_Bar()
-		main.VFM()
-		main.Working_Sheets()
-		#main.Menu_FileManager()
-		
-		#main.Testing()
-	
-	def App_Configuration(main):
+		main.Configuration()
+		main.Containers()
+		main.MainMenu()
+
+	def Configuration(main):
+		main.gui.title("Toaster Pad")
 		main.gui.geometry("1000x700")
-		main.gui.title("UnitePad Studio (Beta)")
-	
-	#Reference Bar --> Displays the directory --> Displays the file name -->Displays what type of file
-	def Reference_Bar(main):
-		main.Reference_Bar = Frame(
+
+	def Containers(main):
+		#info container
+		#File Manager Container
+		#Notepad Container
+
+		main.container00 = Frame(
 			main.gui,
-			bg="black"
-			)
-		main.Reference_Bar.pack(
-			fill=X,
-			)
-		
-		#This is the directory
-		main.Directory_Label = Label(
-			main.Reference_Bar,
-			text="Global Directory: "
-			)
-		main.Directory_Label.pack(
-			side = LEFT,
-			padx = 3,
-			pady = 3,
-			)
-		#This is the status of the directory
-		main.Directory_Status = Label(
-			main.Reference_Bar,
-			text=os.getcwd()
-			)
-		main.Directory_Status.pack(
-			side = LEFT,
-			padx = 3,
-			pady = 3,
-			)
-		
-		main.Secondary = Frame(
+			bg = "red",
+		)
+		main.container00.pack(
+			fill = X,
+		)
+
+		main.container01 = Frame(
 			main.gui,
+			bg = "blue",
+		)
+		main.container01.pack(
+			fill = Y,
+			side = LEFT,
+		)
+
+		main.container02 = Frame(
+			main.gui,
+			bg = "yellow"
+		)
+		main.container02.pack(
+			fill = Y,
+			side = LEFT,
+		)
+		main.ReferenceBar()
+		main.FileManager()
+		main.TextEd()
+
+	def ReferenceBar(main):
+		#layer 1
+		main.Layer1 = Frame(
+			main.container00,
+			bg = "black"
+		)
+		main.Layer1.pack(
+			fill = X,
+		)
+
+		main.label00 = Label(
+			main.Layer1,
+			text = "MCD: ",
 			bg = "black",
-			)
-		main.Secondary.pack(
-			fill=X,
-			)
+			fg = "white",
+		)
+		main.label00.pack(
+			padx = 3,
+			pady = 3,
+			side = LEFT,
+		)
 		
-		main.SL = Label(
-			main.Secondary,
-			text="File Dir: "
-			)
-		main.SL.pack(
-			side = LEFT,
+		main.MCD = Label(
+			main.Layer1,
+			text = os.getcwd(),
+			bg = "black",
+			fg = "white",
+		)
+		main.MCD.pack(
 			padx = 3,
 			pady = 3,
-			)
-			
-		main.SLL = Label(
-			main.Secondary,
-			text="Choose!"
-			)
-		main.SLL.pack(
 			side = LEFT,
-			padx = 3,
-			pady = 3,
-			)
+		)
+		main.Filler00 = Frame(
+			main.container00,
+			bg = "white",
+		)
+		main.Filler00.pack(
+			fill = X,
+		)
 
-		main.SLLL = Label(
-			main.Secondary,
-			text="None!"
-			)
-		main.SLLL.pack(
-			side = LEFT,
-			padx = 3,
-			pady = 3,
-			)			
+		#Layer 2
+		main.Layer2 = Frame(
+			main.container00,
+			bg = "black",
+		)
+		main.Layer2.pack(
+			fill = X,
+		)
 		
-		def clean():
-			os.system("clear")	
-		main.Save_Run_Button = Button(
-			main.Reference_Bar,
-			text = "Clear Console",
-			command = clean,
-			)
+		main.Label01 = Label(
+			main.Layer2,
+			text = "OFD: ",
+			bg = "black",
+			fg = "white",
+		)
+		main.Label01.pack(
+			padx = 3,
+			pady = 3,
+			side = LEFT,
+		)
 
-			
-		main.Save_Run_Button.pack(
+		main.OFD = Label(
+			main.Layer2,
+			text = "No file openned yet!",
+			bg = "black",
+			fg = "white",
+		)
+		main.OFD.pack(
+			padx = 3,
+			pady = 3,
+			side = LEFT,
+		)
+
+		main.Filler01 = Frame(
+			main.Layer2,
+			bg = "white",
+		)
+		main.Filler01.pack(
+			fill = Y,
+			side = LEFT,
+		)
+
+		#filename
+		main.Fname = Label(
+			main.Layer2,
+			text = "Noname",
+			bg = "black",
+			fg = "white",
+		)
+		main.Fname.pack(
+			padx = 3,
+			pady = 3,
+			side = LEFT,
+		)
+
+		main.Filler01 = Frame(
+			main.Layer2,
+			bg = "white",
+		)
+		main.Filler01.pack(
+			fill = Y,
+			side = LEFT,
+		)
+
+		#file type
+		main.FType = Label(
+			main.Layer2,
+			text = "NoType",
+			bg = "black",
+			fg = "white",
+		)
+		main.FType.pack(
+			padx = 3,
+			pady = 3,
+			side = LEFT,
+		)
+
+		main.Filler03 = Frame(
+			main.Layer2,
+			bg = "white",
+		)
+		main.Filler03.pack(
+			fill = Y,
+			side = LEFT,
+		)
+
+
+
+	def FileManager(main):
+		main.Filler00 = Frame(
+			main.container00,
+			bg = "white",
+		)
+		main.Filler00.pack(
+			fill = X,
+		)
+
+		#container01
+		#layer 1
+		main.Layer01 = Frame(
+			main.container01,
+			bg = "black",
+		)
+		main.Layer01.pack(
+			fill = X,
+		)
+		main.Filler00 = Frame(
+			main.Layer01,
+			bg = "white",
+		)
+		main.Filler00.pack(
+			fill = Y,
 			side = RIGHT,
+		)
+
+		#back
+		main.back = Button(
+			main.Layer01,
+			text = "<<",
+			command = main.BackFunction,
+		)
+		main.back.pack(
 			padx = 3,
 			pady = 3,
-			)
-	#Patched File Manager
-	def VFM(main):
-		main.VFM = Frame(
-			main.gui,
-			bg="red",
-			width = 150,
-			)
-		main.VFM.pack(
-			side=LEFT,
-			fill=Y,
-			)
-		
-		#Upper Layer!
-		main.UpperLayer00 = Frame(
-			main.VFM,
-			)
-		main.UpperLayer00.pack(
-			fill=X,
-			)
-		main.File_Manager_Label = Label(
-			main.UpperLayer00,
-			text="File Manager",
-			)
-		main.File_Manager_Label.pack(
-			pady=5,
-			padx=5,
-			)
-		#Button Layer!
-		main.ButtonLayer00 = Frame(
-			main.VFM,
-			)
-		main.ButtonLayer00.pack(
-			fill=X,
-			)
-		#Back Button
-		main.BackButt = Button(
-			main.ButtonLayer00,
-			text = "<-- Back",
-			bg="yellow",
-			command = main.Get_New_Directory,
-		)
-		main.BackButt.pack(
 			side = LEFT,
 		)
-		
-		#New Layer
-		main.ListLayer00 = Frame(
-			main.VFM,
-			)
-		main.ListLayer00.pack(
-			fill=X,
-			)
-		main.List_Items()
-	def List_Items(main):
-		#The listbox of directory
-		main.FL = Listbox(
-			main.ListLayer00,
-			height = 900,
-			)
-		main.FL.pack()
-		main.FL.bind('<Double-1>', lambda event: main.selected())
-		#main.FL.forget()
-		directory = os.getcwd()
-		lists =os.listdir(directory)
+		main.update = Button(
+			main.Layer01,
+			text = "UD",
+			command = main.RefreshState,
+		)
+		main.update.pack(
+			padx = 0,
+			pady = 3,
+			side = LEFT,
+		)
 
-		for x in range(len(lists)):
-			#print(lists[x])
-			main.FL.insert(x,lists[x])
-			
-	def back_dir(main):
+		#rename
+		main.rename = Button(
+			main.Layer01,
+			text = "Rename",
+			command = main.renameF,
+		)
+		main.rename.pack(
+			padx = 3,
+			pady = 3,
+			side = RIGHT,
+		)
+
+		#delete
+		main.delete = Button(
+			main.Layer01,
+			text = "Delete",
+			command = main.deleteF,
+		)
+		main.delete.pack(
+			padx = 3,
+			pady = 3,
+			side = RIGHT,
+		)
+
+		#layer 2
+		main.FileList = Listbox(
+			main.container01,
+			height = 700,
+			width = 30,
+			bg = "#0d0d0d",
+			fg = "white",
+		)
+		main.FileList.pack()
 		directory = os.getcwd()
-		path = Path(directory)
-		backed = path.parent.absolute()
-		os.chdir(backed)
-		#main.file_lists()
+		lists = os.listdir(directory)
+		
+		for x in range(len(lists)):
+			main.FileList.insert(x,lists[x])
+
+		main.FileList.bind('<Double-1>', lambda event: main.safeSelect())
+
+	def RefreshState(main):
+		main.FileList.delete(0,END)
+		odir = main.MCD.cget("text")
+		lists = os.listdir(odir)
+		
+		for x in range(len(lists)):
+			main.FileList.insert(x,lists[x])
+
+	def safeSelect(main):
+		try:
+			main.selected()
+		except:
+			pass
+
 	def selected(main):
-		def failsave():
-			text = main.notepad.get(1.0,END)
-			with open(main.SLLL["text"], 'w') as file:
-				file.write(text)
-		try:
-			failsave() #-->Just incase misclicked!
+		for i in main.FileList.curselection():
+			main.Notepad.delete('1.0', 'end')
+			lists = main.FileList.get(i)
+			#print(lists)
 		
-		except:
-			pass
-		
-		try:
-			main.IDETab.destroy()
-		except:
-			pass
+		if os.path.isfile(lists) == True:
+			main.OFD.config(text = os.getcwd())
+			main.Fname.config(text = lists)
+			filename, filetext = os.path.splitext(lists)
+			main.Notepad.config(state='normal')
+			if filetext == ".py":
+				main.FType.config(text = "Python")
+			elif filetext == ".cs":
+				main.FType.config(text = "C#")
+			elif filetext == ".c":
+				main.FType.config(text = "C")
+			elif filetext == ".cpp":
+				main.FType.config(text = "C++")
+			elif filetext == ".java":
+				main.FType.config(text = "Java")
+			elif filetext == ".js":
+				main.FType.config(text = "Javascript")
+			elif filetext == ".html":
+				main.FType.config(text = "HTML")
+			elif filetext == ".css":
+				main.FType.config(text = "CSS")
+			elif filetext == ".txt":
+				main.FType.config(text = "Text")
 
-		for i in main.FL.curselection():
-			ox = main.FL.get(i)
-		
-		if os.path.isfile(ox) == True :			
-			#print("It is a file")
-			#ming = ox
-			#ming = False
-			#print(ming)
-			directory = os.getcwd()
-			path = directory + "/" + ox
-			
-			main.SLL.forget()
-			main.SLLL.forget()
-			main.SLL = Label(
-				main.Secondary,
-				text=directory
-				)
-			main.SLL.pack(
-				side = LEFT,
-				padx = 3,
-				pady = 3,
-				)
-			main.SLLL = Label(
-				main.Secondary,
-				text=ox
-				)
-			main.SLLL.pack(
-				side = LEFT,
-				padx = 3,
-				pady = 3,
-				)			
-			filename, filext =os.path.splitext(path)
-			if filext == ".py" or filext == ".java":
-				main.IDETab = ttk.Frame(main.WorkingTab, height = 10000, width=1910)
-				
-				main.StatusFrame = Frame(
-					main.IDETab,
-					bg="black",
-					)
-				main.StatusFrame.pack(
-					fill = X,
-					)
-
-				
-				def run_it():
-					#print(main.WorkingTab.select(tabId))
-					jp = os.getcwd()
-					path = jp + "/" + ox
-					name, ext = os.path.splitext(path)
-					
-					if ext == ".py":
-						#print("Python")		
-						pythonname = main.SLLL["text"]
-						pythondir = main.SLL["text"]
-						os.chdir(pythondir)
-						text = main.notepad.get(1.0,END)
-						with open(pythonname, 'w') as file:
-							file.write(text)
-						#print(text)
-						os.system("python3 " + pythonname)
-						#print(path)
-						#os.chdir.main.Directory_Status["text"]
-						#main.file_lists()
-						#main.Get_New_Directory()
-						#reloads the file manager
-						main.FL.forget()
-						main.List_Items()
-												
-					elif ext == ".java":
-						#print(main.DirectFile["text"])
-						javaname = main.SLLL["text"]
-						javadir = main.SLL["text"]
-						os.chdir(javadir)
-						text = main.notepad.get(1.0,END)
-						with open(javaname, 'w') as file:
-							file.write(text)
-						#print(text)
-						mainname, xxx = os.path.splitext(javaname)
-						os.system("javac " + javaname)
-						os.system("java " + mainname)
-						
-						#reloads the file manager
-						main.FL.forget()
-						main.List_Items()
-						#main.Get_New_Directory()						
-						#main.file_lists()						
-						#print(path)						
-						#os.chdir.main.Directory_Status["text"]
-					
-					else:
-						print("others")
-				
-				
-				#Rename File
-				def renameF():
-					#x = messagebox.askquestion("Form", "What do you want to rename to?")
-					#print(x)
-					print("----------")
-					newName = input("You want to rename " + main.SLLL["text"] + " to?: ")
-					#print(newName)
-					os.rename(main.SLLL["text"], newName)
-					
-					#reloads the file manager
-					main.FL.forget()
-					main.List_Items()	
-					failsave()
-					
-					try:
-						main.IDETab.destroy()
-					except:
-						pass									
-					
-				main.RF_Button = Button(
-					main.StatusFrame,
-					text = "Rename",
-					command = renameF,
-					)
-				main.RF_Button.pack(
-					side = LEFT,
-					padx = 3,
-					pady = 3,
-					)				
-				#Save and Run
-				main.SR_Button = Button(
-					main.StatusFrame,
-					text = "Save/Run",
-					command = run_it,
-					)
-				main.SR_Button.pack(
-					side = RIGHT,
-					padx = 3,
-					pady = 3,
-					)
-				
-				#Exit and Save
-				main.EButton = Button(
-					main.StatusFrame,
-					text = "Exit/Save",
-					command = lambda: closeTab(),
-					)
-				main.EButton.pack(
-					side = RIGHT,
-					padx = 3,
-					pady = 3
-					)
-					
-				def closeTab():
-					failsave()
-					main.WorkingTab.forget(main.WorkingTab.select())
-				
-				main.notepad = Text(main.IDETab, height = 10000, width=1910)
-				main.notepad.pack()
-				main.WorkingTab.add(main.IDETab, text=ox)
-				
-				with open(path, 'r') as file:
-					text = file.read()
-					main.notepad.insert('1.0', text)
-				
 			else:
-				pass
+				print("\nSorry unsopported file format! or maybe the developer is not familiar on that format yet and soon to be added on the future updates!")			
+				main.Notepad.config(state=DISABLED)
 
-			
-
-				
-				
-		
-		elif os.path.isdir(ox) == True :
 			directory = os.getcwd()
-			path = directory + "/"+ox
-			new_dir = os.chdir(path)	
-			main.FL.forget()
-			main.Directory_Status.forget()
-			#This is the status of the directory
-			main.Directory_Status = Label(
-				main.Reference_Bar,
-				text=os.getcwd()
-				)
-			main.Directory_Status.pack(
-				side = LEFT,
-				padx = 3,
-				pady = 3,
-				)			
-			main.List_Items()
-			#print(path)
+			path = directory + "/" + lists
+			with open (path, 'r') as file:
+				text = file.read()
+				main.Notepad.insert('1.0', text)
+
+		elif os.path.isdir(lists) == True:
+			directory = os.getcwd()
+			path = directory + "/" + lists
+			os.chdir(path)
 			
-	#Default Null WorkPlace
-	def Working_Sheets(main):
-		#Declare the notebook
-		main.WorkingTab = ttk.Notebook(
-			main.gui,
-			)
-		main.WorkingTab.pack(
-			side=LEFT,
-			)
+			main.FileList.delete(0,END)
+			dirz = os.getcwd()
+			lists = os.listdir(dirz)
+			
+			for x in range(len(lists)):
+				main.FileList.insert(x,lists[x])
+			main.MCD.config(text = os.getcwd())
 
-	
-	#Add Virtual File Manager --> Menu Bar Version
-	def Menu_FileManager(main):
-		#The default tab
-		main.DefaultTab = ttk.Frame(main.WorkingTab, height = 900, width=1910)
-		main.WorkingTab.add(main.DefaultTab, text="File Manager")
 
-	
-	#Functions
-	def exit_app(main):
-		exit()
-	
-	def check_dir(main):
-		directory = os.getcwd()
-		print(directory)
-
-	def add_tab(main):
-		x=0
-		x = x+1
-		main.DefaultTab = ttk.Frame(main.WorkingTab, height = 900, width=1910)
-		main.texty = Text(main.DefaultTab).pack()
-		main.WorkingTab.add(main.DefaultTab, text=x)
-	
-	def Get_New_Directory(main):
+	def BackFunction(main):
 		directory = os.getcwd()
 		path = Path(directory)
 		backed = path.parent.absolute()
-		new_dir = os.chdir(backed)	
-		main.Directory_Status.forget()
-		#This is the status of the directory
-		main.Directory_Status = Label(
-			main.Reference_Bar,
-			text=os.getcwd()
-			)
-		main.Directory_Status.pack(
-			side = LEFT,
-			padx = 3,
-			pady = 3,
-			)		
-		main.FL.forget()
-		main.List_Items()
+		new_dir = os.chdir(backed)
+		
+		main.FileList.delete(0,END)
 
-		#main.Menu_FileManager()
-		
-	def Get_New_Directory2(main):
-		new_dir = fd.askdirectory()
-		os.chdir(new_dir)
-		main.Directory_Status.config(text=new_dir)
-	
-	def App_Menu(main):
-		main.MenuBars = Menu(main.gui)
-		
-		#Files
-		main.Files = Menu(main.MenuBars, tearoff=0)
-		main.MenuBars.add_cascade(label="Files", menu = main.Files)
-		
-		#main.Files.add_command(label="Open Folder", command=main.Get_New_Directory2)
-		main.Files.add_command(label="Save")
-		main.Files.add_command(label="Exit", command = main.exit_app)
-		
-		#Tools
-		main.Tools = Menu(main.MenuBars, tearoff=0)
-		main.MenuBars.add_cascade(label="Tools", menu = main.Tools)
-		
-		main.Tools.add_command(label="Open CMD/Terminal")
-		main.Tools.add_command(label="BODH -Converter")
-		main.Tools.add_command(label="Color Picker")
-		
-		#Programs
-		main.Programs = Menu(main.MenuBars, tearoff=0)
-		main.MenuBars.add_cascade(label="Programs", menu = main.Programs)
-		
-		#Python
-		main.Python = Menu(main.MenuBars, tearoff=0)
-		main.Programs.add_cascade(label="Python", menu = main.Python)
-		
-		main.Python.add_command(label="New Python File")
-		main.Python.add_command(label="New Tkinter File(GUI)")
-		main.Python.add_command(label="Create Virtual Environment")
-		#Add more Python in the future just in case!
-				
-		#Java
-		main.Java = Menu(main.MenuBars, tearoff=0)
-		main.Programs.add_cascade(label="Java", menu = main.Java)
-		
-		main.Java.add_command(label="New Java File")
-		main.Java.add_command(label="Java GUI")#Implement all Action Commands and Mouse Listener
-		#Add more Java in the future just in case!
-
-		#Web
-		main.Web = Menu(main.MenuBars, tearoff=0)
-		main.Programs.add_cascade(label="Web", menu = main.Web)
-		#HTML
-		main.Web.add_command(label="New HTML File")
-		#CSS
-		main.Web.add_command(label="New CSS File")
-		#JavaScript
-		main.Web.add_command(label="New Javascript File")
-		
-		#Graphic
-		main.Graphic = Menu(main.MenuBars, tearoff=0)
-		main.Programs.add_cascade(label="Graphic", menu = main.Graphic)
-		#Editing --> Photo Editing/Video Editing
-		main.Editing = Menu(main.MenuBars, tearoff=0)
-		main.Graphic.add_cascade(label="Editing", menu = main.Editing)
-		main.Editing.add_command(label="Photo Editing")
-		main.Editing.add_command(label="Video Editing")
-		
-		#Animating Beta
-		main.Graphic.add_command(label="Painting Beta")
-		main.Graphic.add_command(label="Animating Beta")
-		main.Graphic.add_command(label="3D Beta")
-		
-		#Experimental Menu --> Must Delete Later!
-		#main.Experimental = Menu(main.MenuBars, tearoff=0)
-		#main.MenuBars.add_cascade(label="Experimental Menu", menu = main.Experimental)
-		
-		#main.Experimental.add_command(label="Check Directory", command = main.check_dir)
-		#main.Experimental.add_command(label="Add Tab", command = main.add_tab)
-		#main.Experimental.add_command(label="Print File", command = main.PrintFiles)
-		
-		
-		main.gui.config(menu=main.MenuBars)
-	
-	def PrintFiles(main):
 		directory = os.getcwd()
-		lists =os.listdir(directory)
+		lists = os.listdir(directory)
 		
 		for x in range(len(lists)):
-			print(lists[x])
+			main.FileList.insert(x,lists[x])	
+		
+		main.MCD.config(text = os.getcwd())
 	
-	def CoreRunner(main):
+	def TextEd(main):
+		main.Notepad = Text(
+			main.container02,
+			width = 700,
+			height = 500,
+			undo = True,
+			bg = "#1a1a1a",
+			fg = "#00ff00",
+			insertbackground="white",
+		)
+		main.Notepad.pack()
+
+		main.gui.bind('<F5>', lambda event: main.saveEnRun())
+		main.gui.bind('<Control-r>', lambda event: main.safeRun())
+		main.gui.bind('<Control-s>', lambda event: main.safeSave())
+	
+	def saveEnRun(main):
+		main.safeSave()
+		main.safeRun()	
+	
+	def safeRun(main):
+		try:
+			main.running()
+		except:
+			pass
+
+	def running(main):
+		odir = main.MCD.cget("text")
+		dir = main.OFD.cget("text")
+		name = main.Fname.cget("text")
+		type = main.FType.cget("text")
+		if type == "Python":
+			#print(name)
+			os.chdir(dir)
+			print("\n\n" + os.getcwd() + "/" + name)
+			os.system("python " + name)
+			os.chdir(odir)
+			main.RefreshState()
+
+		elif type == "Java":
+			os.chdir(dir)
+			print("\n\n" + os.getcwd() + "/" + name)
+			os.system("javac " + name)
+			jname, ef = os.path.splitext(name)
+			os.system("java " + jname)
+			os.chdir(odir)
+			main.RefreshState()
+
+		elif type == "HTML":
+			os.chdir(dir)
+			print("\n\n" + os.getcwd() + "/" + name)
+			os.system(name)
+			os.chdir(odir)
+			main.RefreshState()
+
+		elif type == "Javascript":
+			os.system("color 3")
+			os.chdir(dir)
+			print("\n\n" + os.getcwd() + "/" + name)
+			os.system("node " + name)
+			os.chdir(odir)
+			main.RefreshState()
+
+		elif type == "C":		
+			os.chdir(dir)
+			print("\n\n" + os.getcwd() + "/" + name)
+			jname, ef = os.path.splitext(name)
+			os.system("gcc " + name + " -o " + jname + ".exe")
+			os.system(jname + ".exe")
+			os.chdir(odir)
+			main.RefreshState()
+		
+		elif type == "C++":
+			os.chdir(dir)
+			print("\n\n" + os.getcwd() + "/" + name)
+			jname, ef = os.path.splitext(name)
+			os.system("g++ " + name + " -o " + jname + ".exe")
+			os.system(jname + ".exe")
+			os.chdir(odir)
+			main.RefreshState()
+
+		elif type == "C#":
+			os.chdir(dir)
+			print("\n\n" + os.getcwd() + "/" + name)
+			jname, ef = os.path.splitext(name)
+			os.system("csc " + name)
+			os.system(jname)
+			os.chdir(odir)
+			main.RefreshState()
+
+		else:
+			pass
+	def deleteF(main):
+		for i in main.FileList.curselection():
+			name = main.FileList.get(i)
+			#print(name)	
+
+		print("\nDo you really want to delete " + name + "?")
+		feedback = input("y/n: ")	
+		feedback.lower()
+		if feedback == "y":
+			#saving your desicion just in case you regret the first click!
+			print("\nAre you 100% super duper sure about that? Because I cannot guarantee that it will be stored on recycle bin later!!")
+			feedback02 = input("y/n: ")
+			feedback02.lower()
+
+			if feedback02 == "y":
+				print("\tOkay! Deleting " + name + ".....")
+				try:
+					os.remove(name)
+					print("\t[Done Deleting the File!]")
+				except:
+					os.rmdir(name)
+					print("\t[Done Deleting the Folder!]")
+
+			elif feedback02 == "n":
+				print("\tOkay! You're Welcome!")
+				main.RefreshState()
+		
+		elif feedback == "n":
+			print("\nDid you just change your mind? Okay!")
+			pass
+			
+		else:
+			print("\nThe only option is Y or N, yes or no, please fix your input!")
+			main.renameF()
+			
+
+	def renameF(main):
+		for i in main.FileList.curselection():
+			name = main.FileList.get(i)
+			#print(name)
+
+		print("\nYou want to rename " + name + " right?")
+		feedback = input("y/n: ")
+		feedback.lower()
+		if feedback == "y":
+			print("\nPlease don't forget to include the file name extension")
+			newname = input("Okay! what do you want it to rename to?: ")
+				
+			print("\nRenaming " + name + " onto " + newname)
+				
+			os.rename(name, newname)
+			main.RefreshState()
+		
+			print("\n[Finished Renaming!]")
+		
+		elif feedback == "n":
+			print("\nDid you just change your mind? Okay!")
+			pass
+			
+		else:
+			print("\nThe only option is Y or N, yes or no, please fix your input!")
+			main.renameF()	
+
+	def safeSave(main):
+		try:
+			main.saved()
+		except:
+			pass
+
+	def saved(main):
+		odir = main.MCD.cget("text")
+		dir = main.OFD.cget("text")
+		os.chdir(dir)
+		text = main.Notepad.get(1.0, END)
+		nameX = main.Fname.cget("text")
+
+		if nameX == "Noname":
+			pass
+		
+		else:
+			#print(nameX)
+			with open(nameX, 'w') as file:
+				file.write(text)
+		os.chdir(odir)
+
+	def exec(main):
 		main.gui.mainloop()
+		os.system("color 7")
+
+	def CC(main):
+		os.system("cls")	
+
+	def MainMenu(main):
+		main.MenuBars = Menu(main.gui)
+		main.gui.config(menu = main.MenuBars)
+		
+		main.menuPlugs()
+
+	def menuPlugs(main):
+		main.FileMenu()
+		main.ProgramMenu()
+		main.ConsoleMenu()
+
+	def ProgramMenu(main):
+		main.Programs = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label = "Programs", menu = main.Programs)
 	
-if __name__=="__main__":
+		main.Programs.add_command(label = "New Folder", command = main.newFolder)
+		main.Programs.add_command(label = "New Text", command = main.newText)
+		main.Programs.add_command(label = "New Python", command = main.newPython)
+		main.Programs.add_command(label = "New Java", command = main.newJava)
+		main.Programs.add_command(label = "New C", command = main.newC)
+		main.Programs.add_command(label = "New C++", command = main.newCPP)
+		main.Programs.add_command(label = "New C#", command = main.newCS)
+		main.Programs.add_command(label = "New HTML", command = main.newHTML)
+		main.Programs.add_command(label = "New CSS", command = main.newCSS)
+		main.Programs.add_command(label = "New Javascript", command = main.newJS)
+
+	def newFolder(main):
+		os.mkdir("New ToasterFolder")
+		print("\nNew Folder Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newText(main):
+		text = ""
+		with open("newPyText.txt", "w") as file:
+			file.write(text)
+		print("\nNew Text File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newPython(main):
+		text = ""
+		with open("newPyToaster.py", "w") as file:
+			file.write(text)
+		print("\nNew Python File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newJava(main):
+		text = ""
+		with open("newJToaster.java", "w") as file:
+			file.write(text)
+		print("\nNew Java File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+	
+	def newC(main):
+		text = ""
+		with open("newCToaster.c", "w") as file:
+			file.write(text)
+		print("\nNew C File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newCPP(main):
+		text = ""
+		with open("newCPPToaster.cpp", "w") as file:
+			file.write(text)
+		print("\nNew C++ File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newCS(main):
+		text = ""
+		with open("newCSToaster.cs", "w") as file:
+			file.write(text)
+		print("\nNew C# File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newHTML(main):
+		text = ""
+		with open("newHTMLToaster.html", "w") as file:
+			file.write(text)
+		print("\nNew HTML File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newCSS(main):
+		text = ""
+		with open("newCSSToaster.css", "w") as file:
+			file.write(text)
+		print("\nNew CSS File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def newJS(main):
+		text = ""
+		with open("newNodeToaster.js", "w") as file:
+			file.write(text)
+		print("\nNew Javascript File Created! Make Sure to rename it before using it!")
+		main.RefreshState()
+
+	def ConsoleMenu(main):
+		main.Console = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label = "Console Commands", menu = main.Console)
+
+		main.Console.add_command(label = "Clear Console", command = main.CC)
+
+	def FileMenu(main):
+		main.File = Menu(main.MenuBars, tearoff=0)
+		main.MenuBars.add_cascade(label = "File", menu = main.File)
+
+		main.File.add_command(label = "Save (Ctrl-s)", command = main.safeSave)	
+		main.File.add_command(label = "Run (Ctrl-r)", command = main.safeRun)	
+		main.File.add_command(label = "Save and Run (F5)", command = main.saveEnRun)	
+
+
+if __name__ == "__main__":
 	App = Core()
-	App.CoreRunner()
+	App.exec()
