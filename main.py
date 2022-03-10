@@ -16,10 +16,12 @@ class Core:
 		main.Configuration()
 		main.Containers()
 		main.MainMenu()
+		main.updateLine()
 
 	def Configuration(main):
-		main.gui.title("Toaster Pad")
+		main.gui.title("Toaster Pad (Beta)")
 		main.gui.geometry("1000x700")
+		main.gui.protocol("WM_DELETE_WINDOW",lambda: main.exitEnSave())
 
 	def Containers(main):
 		#info container
@@ -224,7 +226,7 @@ class Core:
 		)
 		main.update = Button(
 			main.Layer01,
-			text = "UD",
+			text = "UBD", #-->Update Block's Directory
 			command = main.RefreshState,
 		)
 		main.update.pack(
@@ -233,9 +235,53 @@ class Core:
 			side = LEFT,
 		)
 
+		#filler
+		main.fillerx = Frame(
+			main.Layer2,
+			bg = "white",
+		)
+		#main.fillerx.pack(
+		#	side = RIGHT,
+		#	fill = Y,
+		#	padx = 10,
+		#)
+
+		##move item
+		#main.moveitem = Button(
+		#	main.Layer2,
+		#	text = "Move",
+		#)
+		#main.moveitem.pack(
+		#	padx = 3,
+		#	pady = 3,
+		#	side = RIGHT,	
+		#)
+
+		#copy item
+		main.copyitem = Button(
+			main.Layer2,
+			text = "Copy",
+		)
+		#main.copyitem.pack(
+	#		padx = 3,
+		#	pady = 3,
+		#	side = RIGHT,	
+		#)
+
+		#filler
+		main.fillerx = Frame(
+			main.Layer2,
+			bg = "white",
+		)
+		main.fillerx.pack(
+			side = RIGHT,
+			fill = Y,
+			padx = 10,
+		)
+
 		#rename
 		main.rename = Button(
-			main.Layer01,
+			main.Layer2,
 			text = "Rename",
 			command = main.renameF,
 		)
@@ -247,7 +293,7 @@ class Core:
 
 		#delete
 		main.delete = Button(
-			main.Layer01,
+			main.Layer2,
 			text = "Delete",
 			command = main.deleteF,
 		)
@@ -256,6 +302,18 @@ class Core:
 			pady = 3,
 			side = RIGHT,
 		)
+
+		#filler
+		main.fillerx = Frame(
+			main.Layer2,
+			bg = "white",
+		)
+		main.fillerx.pack(
+			side = RIGHT,
+			fill = Y,
+			padx = 10,
+		)
+	
 
 		#layer 2
 		main.FileList = Listbox(
@@ -290,10 +348,10 @@ class Core:
 
 	def selected(main):
 		for i in main.FileList.curselection():
+			main.Notepad.config(state = NORMAL)
 			main.Notepad.delete('1.0', 'end')
 			lists = main.FileList.get(i)
 			#print(lists)
-		
 		if os.path.isfile(lists) == True:
 			main.OFD.config(text = os.getcwd())
 			main.Fname.config(text = lists)
@@ -340,8 +398,7 @@ class Core:
 			for x in range(len(lists)):
 				main.FileList.insert(x,lists[x])
 			main.MCD.config(text = os.getcwd())
-
-
+		main.exageratedLine()
 	def BackFunction(main):
 		directory = os.getcwd()
 		path = Path(directory)
@@ -357,8 +414,47 @@ class Core:
 			main.FileList.insert(x,lists[x])	
 		
 		main.MCD.config(text = os.getcwd())
+
+	def multiple_yview(main,*args):
+			main.Line.yview(*args)
+			main.Notepad.yview(*args)
+	def disabled(main,event):
+			return 'break'
 	
 	def TextEd(main):
+		
+
+		main.scrollbarY = Scrollbar(
+			main.container02, 
+			orient = VERTICAL,
+			command = main.multiple_yview,
+		)
+
+		main.scrollbarY.pack(
+			side = RIGHT,
+			fill = Y,
+		)
+		
+		main.scrollbarX = Scrollbar(
+			main.container02,
+			orient = HORIZONTAL,
+		)
+		main.scrollbarX.pack(
+			side = BOTTOM,
+			fill = X,
+		)
+
+		main.gui.config(cursor='')
+		main.Line = Text(
+			main.container02, 
+			width = 4,
+			state = DISABLED,
+		)
+		main.Line.pack(
+			side = LEFT,
+			fill = BOTH,
+		)
+
 		main.Notepad = Text(
 			main.container02,
 			width = 700,
@@ -367,14 +463,58 @@ class Core:
 			bg = "#1a1a1a",
 			fg = "#00ff00",
 			insertbackground="white",
+			xscrollcommand = main.scrollbarX.set,
+			wrap = NONE,
+			state = DISABLED,
 		)
-		main.Notepad.pack()
+		main.Notepad.pack(
+			side=LEFT, 
+			fill=BOTH, 
+			expand=0,
+		)
+		main.Notepad.bind("<MouseWheel>", main.disabled)
+		main.Line.bind("<MouseWheel>", main.disabled)
+		main.scrollbarX.config(command = main.Notepad.xview)
+
+		main.Notepad.config(state = NORMAL)
+		main.Notepad.insert('1.0', "Please Open a File to get started!")
+		main.Notepad.config(state = DISABLED)
+		
 
 		main.gui.bind('<F5>', lambda event: main.saveEnRun())
 		main.gui.bind('<Control-r>', lambda event: main.safeRun())
 		main.gui.bind('<Control-s>', lambda event: main.safeSave())
+
+		main.gui.bind('<Control-R>', lambda event: main.safeRun())
+		main.gui.bind('<Control-S>', lambda event: main.safeSave())
+
+		main.Notepad.bind("<Key>", lambda event: 		main.safeSave())
+		main.Notepad.bind("<Return>",lambda event: main.exageratedLine())
+		main.Notepad.bind("<BackSpace>",lambda event: main.exageratedLine())
+		main.Notepad.bind("<space>",lambda event: main.exageratedLine())
+
+		main.Notepad.configure(yscrollcommand = main.scrollbarY.set)
+		main.Line.configure(yscrollcommand = main.scrollbarY.set)
 	
+	def exageratedLine(main):
+		main.updateLine()
+		#main.updateLine()
+		#main.updateLine()
+
+	def updateLine(main):
+		main.Line.config(state = NORMAL)
+		main.Line.delete('1.0', END)
+		lineC = int(main.Notepad.index('end-1c').split('.')[0])
+		for i in range(lineC):
+			main.Line.insert(END, str(i+1)+"\n")
+		main.Line.config(state = DISABLED)
+		num = (i+1) + 0.0
+		#print(num)
+		main.Line.see(str(num))
+		main.Notepad.see(str(num))
+
 	def saveEnRun(main):
+		main.updateLine()
 		main.safeSave()
 		main.safeRun()	
 	
@@ -396,6 +536,7 @@ class Core:
 			os.system("python " + name)
 			os.chdir(odir)
 			main.RefreshState()
+			os.system("color 3")
 
 		elif type == "Java":
 			os.chdir(dir)
@@ -405,6 +546,7 @@ class Core:
 			os.system("java " + jname)
 			os.chdir(odir)
 			main.RefreshState()
+			os.system("color 3")
 
 		elif type == "HTML":
 			os.chdir(dir)
@@ -414,12 +556,12 @@ class Core:
 			main.RefreshState()
 
 		elif type == "Javascript":
-			os.system("color 3")
 			os.chdir(dir)
 			print("\n\n" + os.getcwd() + "/" + name)
 			os.system("node " + name)
 			os.chdir(odir)
 			main.RefreshState()
+			os.system("color 3")
 
 		elif type == "C":		
 			os.chdir(dir)
@@ -429,6 +571,7 @@ class Core:
 			os.system(jname + ".exe")
 			os.chdir(odir)
 			main.RefreshState()
+			os.system("color 3")
 		
 		elif type == "C++":
 			os.chdir(dir)
@@ -438,6 +581,7 @@ class Core:
 			os.system(jname + ".exe")
 			os.chdir(odir)
 			main.RefreshState()
+			os.system("color 3")
 
 		elif type == "C#":
 			os.chdir(dir)
@@ -447,6 +591,7 @@ class Core:
 			os.system(jname)
 			os.chdir(odir)
 			main.RefreshState()
+			os.system("color 3")
 
 		else:
 			pass
@@ -520,6 +665,10 @@ class Core:
 		except:
 			pass
 
+	def exitEnSave(main):
+		main.safeSave()
+		main.gui.destroy()
+
 	def saved(main):
 		odir = main.MCD.cget("text")
 		dir = main.OFD.cget("text")
@@ -558,22 +707,35 @@ class Core:
 	def ProgramMenu(main):
 		main.Programs = Menu(main.MenuBars, tearoff=0)
 		main.MenuBars.add_cascade(label = "Programs", menu = main.Programs)
-	
-		main.Programs.add_command(label = "New Folder", command = main.newFolder)
-		main.Programs.add_command(label = "New Text", command = main.newText)
-		main.Programs.add_command(label = "New Python", command = main.newPython)
-		main.Programs.add_command(label = "New Java", command = main.newJava)
-		main.Programs.add_command(label = "New C", command = main.newC)
-		main.Programs.add_command(label = "New C++", command = main.newCPP)
-		main.Programs.add_command(label = "New C#", command = main.newCS)
-		main.Programs.add_command(label = "New HTML", command = main.newHTML)
-		main.Programs.add_command(label = "New CSS", command = main.newCSS)
-		main.Programs.add_command(label = "New Javascript", command = main.newJS)
+
+		#simple fils
+		main.simpleP = Menu(main.Programs, tearoff = 0)
+		main.Programs.add_cascade(label = "Simple FIles", menu = main.simpleP)
+		main.simpleP.add_command(label = "New Folder", command = main.newFolder)
+		main.simpleP.add_command(label = "New Text", command = main.newText)
+
+		#programming languages
+		main.langP = Menu(main.Programs, tearoff = 0)
+		main.Programs.add_cascade(label = "Lanuages", menu = main.langP)
+
+		main.langP.add_command(label = "New Python", command = main.newPython)
+		main.langP.add_command(label = "New Java", command = main.newJava)
+		main.langP.add_command(label = "New C", command = main.newC)
+		main.langP.add_command(label = "New C++", command = main.newCPP)
+		main.langP.add_command(label = "New C#", command = main.newCS)
+
+		#web
+		main.webP = Menu(main.Programs, tearoff = 0)
+		main.Programs.add_cascade(label = "Web Dev", menu = main.webP)	
+		main.webP.add_command(label = "New HTML", command = main.newHTML)
+		main.webP.add_command(label = "New CSS", command = main.newCSS)
+		main.webP.add_command(label = "New Javascript", command = main.newJS)
 
 	def AboutMenu(main):
 		main.Aboutz = Menu(main.MenuBars, tearoff=0)
 		main.MenuBars.add_cascade(label = "About", menu = main.Aboutz)
 	
+		main.Aboutz.add_command(label = "Guide!")
 		main.Aboutz.add_command(label = "Support!", command = main.openShitSite)
 
 	def openShitSite(main):
@@ -651,6 +813,25 @@ class Core:
 		main.Console = Menu(main.MenuBars, tearoff=0)
 		main.MenuBars.add_cascade(label = "Console Commands", menu = main.Console)
 
+		main.ConsoleColor = Menu(main.Console, tearoff=0)
+		main.Console.add_cascade(label = "Console Color", menu = main.ConsoleColor)
+		
+		main.ConsoleColor.add_command(label="Black", command = lambda: os.system("color 0"))
+		main.ConsoleColor.add_command(label="Blue", command = lambda: os.system("color 1"))
+		main.ConsoleColor.add_command(label="Green", command = lambda: os.system("color 2"))
+		main.ConsoleColor.add_command(label="Aqua", command = lambda: os.system("color 3"))
+		main.ConsoleColor.add_command(label="Red", command = lambda: os.system("color 4"))
+		main.ConsoleColor.add_command(label="Purple", command = lambda: os.system("color 5"))
+		main.ConsoleColor.add_command(label="Yellow", command = lambda: os.system("color 6"))
+		main.ConsoleColor.add_command(label="White", command = lambda: os.system("color 7"))
+		main.ConsoleColor.add_command(label="Gray", command = lambda: os.system("color 8"))
+		main.ConsoleColor.add_command(label="Light Blue", command = lambda: os.system("color 9"))
+		main.ConsoleColor.add_command(label="Light Green", command = lambda: os.system("color A"))
+		main.ConsoleColor.add_command(label="Light Aqua", command = lambda: os.system("color B"))
+		main.ConsoleColor.add_command(label="Light Red", command = lambda: os.system("color C"))
+		main.ConsoleColor.add_command(label="Light Purple", command = lambda: os.system("color D"))
+		main.ConsoleColor.add_command(label="Light Yellow", command = lambda: os.system("color E"))
+		main.ConsoleColor.add_command(label="Bright White", command = lambda: os.system("color F"))
 		main.Console.add_command(label = "Clear Console", command = main.CC)
 
 	def FileMenu(main):
@@ -660,6 +841,7 @@ class Core:
 		main.File.add_command(label = "Save (Ctrl-s)", command = main.safeSave)	
 		main.File.add_command(label = "Run (Ctrl-r)", command = main.safeRun)	
 		main.File.add_command(label = "Save and Run (F5)", command = main.saveEnRun)	
+		main.File.add_command(label = "Exit", command = lambda: main.exitEnSave())
 
 
 if __name__ == "__main__":
